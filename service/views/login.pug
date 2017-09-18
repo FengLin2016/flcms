@@ -1,0 +1,12 @@
+extends layout
+
+block content
+	
+	form(action="/admin/logining" method="post")
+		div.login
+			h1 后台登陆
+			.form-group
+				input(type="text" class="form-control" name="name"  placeholder="用户名")
+			.form-group
+				input(type="password" class="form-control" name="pwd"  placeholder="密码")
+			button(type="submit" class="btn btn-default") 登陆

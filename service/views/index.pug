@@ -1,0 +1,52 @@
+extends layout
+
+block content
+		link(rel='stylesheet', href='/stylesheets/css/fm.tagator.jquery.css')
+		.navbar.navbar-inverse
+			.container
+				.navbar-header
+					.navbar-brand 后台管理
+		.container
+			.row
+				.col-sm-3.col-md-2.sidebar
+					.list-group
+						a.list-group-item.active(href="/admin") 发布文章
+						a.list-group-item(href="/admin/list") 文章列表
+				.col-sm-9.col-md-10.main
+					form.form-horizontal(action="/admin/add" method="post")
+						.form-group
+							label.col-sm-2.control-label 标题
+							.col-sm-10
+								input.form-control(name="title" value= article.title)
+						.form-group
+							label.col-sm-2.control-label 标签
+							.col-sm-10
+								input.form-control(name="tags" id="inputTagator" value= article.tags[0])
+						.form-group
+							label.col-sm-2.control-label 作者
+							.col-sm-10
+								input.form-control(name="author" value= article.author )
+						.form-group
+							label.col-sm-2.control-label 内容
+							.col-sm-10
+								input(type="hidden" name="content" id="content" value= article.content)
+								input(type="hidden" name="id" value= article.id)
+								textarea.form-control(rows="10" )#fieldTest #{article.content}
+						input.btn.btn-primary(type="submit"  value="提交")
+
+		script(src='/stylesheets/js/simplemde.min.js' type="text/javascript")
+		script(src='/stylesheets/js/fm.tagator.jquery.js' type="text/javascript")
+		script.
+			var simplemde = new SimpleMDE({
+					element: document.getElementById("fieldTest"),
+					autoDownloadFontAwesome: true,
+					status: false
+			})
+			simplemde.codemirror.on("change", function(){
+				$("#content").val(simplemde.value())
+			})
+			//标签
+			$('#inputTagator').tagator({
+				autocomplete:"#{tags}".split(",")
+			})
+

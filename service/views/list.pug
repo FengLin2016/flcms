@@ -1,0 +1,84 @@
+extends layout
+
+block content
+		link(rel='stylesheet', href='/stylesheets/css/fm.tagator.jquery.css')
+		.navbar.navbar-inverse
+			.container
+				.navbar-header
+					.navbar-brand 后台管理
+		.container
+			.row
+				.col-sm-3.col-md-2.sidebar
+					.list-group
+						a.list-group-item(href="/admin") 发布文章
+						a.list-group-item.active(href="/admin/list") 文章列表
+				.col-sm-9.col-md-10.main
+					table.table.table-hover
+						tr
+							th 标题
+							th(width="320").hidden-xs 描述
+							th.text-center 浏览次数
+							th.text-center 是否显示
+							th.text-center 最后修改日期
+							th.text-center 操作
+						-for(var item in list)
+							tr
+								td #{list[item].title}
+								td.hidden-xs #{list[item].describe} ...
+								td.text-center #{list[item].hits}
+								td.text-center #{list[item].isDel?'否':'是'}
+								td.text-center #{moment(list[item].updateDate).format("YYYY-MM-DD")}
+								td.text-center 
+									a(href='/admin/'+list[item].id).text-primary 修改 
+									span |  
+									a(href="javascript:hide('"+ list[item].id+"')").text-warning #{list[item].isDel?'显示':'隐藏'}
+									span |  
+									a(href="javascript:del('"+list[item].id+"');").text-danger 删除									
+					nav(aria-label="Page navigation") 
+						ul(class="pagination")
+							li
+								a(href="#" aria-label="Previous")
+									span(aria-hidden="true") &laquo;
+							-for(i=1;i<=pageCount;i++)
+								if page == i
+									li.active
+										a(href="/admin/list/"+i)= i
+								else
+									li
+										a(href="/admin/list/"+i)= i
+							li
+								a(href="#" aria-label="Next")
+									span(aria-hidden="true") &raquo;
+		script.
+			function del(id){
+				$.ajax({
+					url:'/admin/del/'+id,
+					type:'GET',
+					success:function(res){
+						if(res.status){
+							alert('删除成功！')
+							location.href="/admin/list"	
+						}else{
+							alert('删除失败！')
+						}
+						
+					}
+				});
+			}
+
+			function hide(id){
+				$.ajax({
+					url:'/admin/hide/'+id,
+					type:'GET',
+					success:function(res){
+						if(res.status){
+							alert('修改成功！')
+							location.href="/admin/list"	
+						}else{
+							alert('修改失败！')
+						}
+						
+					}
+				});
+			}			
+						
